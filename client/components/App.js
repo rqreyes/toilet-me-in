@@ -4,27 +4,53 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      flask: []
+      queue: []
     };
+    this.getQueue = this.getQueue.bind(this);
+    this.removePerson = this.removePerson.bind(this);
   }
 
   componentDidMount() {
-    fetch('/api/flask')
+    this.getQueue();
+  }
+
+  getQueue() {
+    fetch('/bathroom')
       .then(res => res.json())
-      .then(flask =>
-        this.setState({ flask }, () => console.log('Flask fetched...', flask))
+      .then(queue =>
+        this.setState({ queue }, () => console.log('Fetched queue', queue))
       );
+  }
+
+  removePerson(id) {
+    this.setState({
+      queue: this.state.queue.filter(person => person.id !== id)
+    });
+    fetch('/bathroom/' + id, { method: 'DELETE' });
   }
 
   render() {
     return (
       <div>
-        <h1>Task Flask</h1>
-        <ul>
-          {this.state.flask.map(task => (
-            <li key={task.id}>{task.task}</li>
+        <h1>ToiLet Me In</h1>
+        <ol>
+          {this.state.queue.map(person => (
+            <li key={person.id} id={person.id}>
+              <p>{person.name}</p>
+              <p>{person.urgency}</p>
+              <button onClick={e => this.removePerson(person.id, e)}>
+                Remove
+              </button>
+            </li>
           ))}
-        </ul>
+        </ol>
+        <div className='add-person'>
+          <label htmlFor='name'>Name</label>
+          <input id='name' type='text' />
+          <label htmlFor='urgency'>Urgency</label>
+          <input id='urgency' type='text' />
+          <button>Submit</button>
+        </div>
       </div>
     );
   }

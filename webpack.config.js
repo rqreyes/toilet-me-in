@@ -1,18 +1,18 @@
 const path = require('path');
 
 module.exports = {
+  mode: process.env.NODE_ENV,
   entry: './client/index.js',
-  devServer: {
-    publicPath: 'localhost:3000/build',
-    proxy: {
-      '/api': 'http://localhost:3000'
-    }
-  },
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: 'bundle.js'
   },
-  mode: process.env.NODE_ENV,
+  devServer: {
+    publicPath: '/build',
+    proxy: {
+      '*': 'http://localhost:3000'
+    }
+  },
   module: {
     rules: [
       {
@@ -26,7 +26,7 @@ module.exports = {
         }
       },
       {
-        test: /\.scss$/,
+        test: /\.s?css/,
         use: [
           'style-loader', // creates style nodes from JS strings
           'css-loader', // translates CSS into CommonJS
