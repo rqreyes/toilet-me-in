@@ -1,7 +1,10 @@
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const userController = require('./controllers/userController');
 const queueController = require('./controllers/queueController');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
@@ -12,8 +15,22 @@ app.use(
     extended: true
   })
 );
+app.use(cookieParser());
 
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../login.html'));
+});
+
+app.post(
+  '/login',
+  userController.findUser,
+  userController.createToken,
+  (req, res) => {
+    res.redirect('/');
+  }
+);
+
+app.get('/', userController.verifyToken, (req, res) => {
   res.sendFile(path.resolve(__dirname, '../index.html'));
 });
 

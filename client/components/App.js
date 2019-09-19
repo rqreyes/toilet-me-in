@@ -82,6 +82,11 @@ class App extends Component {
               </li>
             ))}
           </ol>
+          <div className='headers'>
+            <h2>Name</h2>
+            <h2>Urgency</h2>
+            <h2>Add</h2>
+          </div>
           <div className='add-person'>
             <input id='name' type='text' placeholder='Name' ref={this.name} />
             <input
