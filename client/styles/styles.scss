@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower&display=swap');
+
+// general
+body {
+  counter-reset: li;
+  font-family: 'Indie Flower', cursive;
+  background: linear-gradient(45deg, purple, navy, lightskyblue);
+  background-size: 400%;
+  animation: gradientBG 10s ease infinite;
+}
+
+h1 {
+  font-size: 50px;
+  text-align: center;
+  border-radius: 20px 20px 0 0;
+  background: #fff;
+  padding: 20px;
+  margin: 0 0 20px;
+}
+
+h2 {
+  flex: 1;
+  font-size: 30px;
+  text-align: center;
+  margin: 0 0 10px;
+  position: relative;
+
+  &::after {
+    content: '';
+    width: 80%;
+    height: 1px;
+    background: #000;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+p {
+  font-size: 22px;
+  margin: 10px 0;
+}
+
+ol {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p,
+  button {
+    width: calc(100% / 3);
+  }
+
+  .name {
+    &::before {
+      counter-increment: li;
+      content: counter(li) '.';
+      margin-right: 5px;
+    }
+  }
+
+  .urgency {
+    text-align: center;
+  }
+}
+
+button {
+  border: 0;
+  background: none;
+  padding: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.remove {
+    &::before {
+      content: '\274c';
+    }
+  }
+}
+
+// containers
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 500px;
+}
+
+.content {
+  background: #fff;
+  border-radius: 0 0 20px 20px;
+  padding: 20px;
+  position: relative;
+}
+
+.handle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #bbb;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  transition: 0.2s;
+
+  &::before {
+    content: '';
+    width: 60px;
+    height: 20px;
+    background: #bbb;
+    position: absolute;
+    top: 0;
+    left: -40px;
+  }
+
+  &:hover {
+    transform: rotate(-60deg);
+  }
+}
+
+.headers {
+  display: flex;
+}
+
+.add-person {
+  display: flex;
+
+  input,
+  button {
+    width: calc(100% / 3);
+    margin: 10px;
+  }
+
+  input {
+    padding: 5px;
+    font-size: 22px;
+  }
+
+  .submit {
+    flex: 1 0 calc(100% / 3);
+    padding: 0;
+    margin: 0;
+    position: relative;
+
+    &::before,
+    &::after {
+      content: '';
+      background: green;
+      position: absolute;
+    }
+
+    &::before {
+      width: 4px;
+      height: 20px;
+      margin: auto;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 6px;
+      transform: rotate(45deg);
+    }
+
+    &::after {
+      width: 4px;
+      height: 10px;
+      margin: auto;
+      top: 28px;
+      left: 0;
+      right: 12px;
+      transform: rotate(-45deg);
+    }
+  }
+}
+
+// animation
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

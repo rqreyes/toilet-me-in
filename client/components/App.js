@@ -28,6 +28,11 @@ class App extends Component {
   addPerson() {
     const nameInput = this.name.current.value;
     const urgencyInput = this.urgency.current.value;
+    const inputList = document.getElementsByTagName('input');
+
+    for (let input of inputList) {
+      input.value = '';
+    }
 
     fetch('/bathroom', {
       headers: {
@@ -46,38 +51,47 @@ class App extends Component {
   }
 
   removePerson(id) {
+    let newQueue = [...this.state.queue];
+    newQueue = newQueue.filter(person => person.id !== id);
     this.setState({
-      queue: this.state.queue.filter(person => person.id !== id)
+      queue: newQueue
     });
     fetch('/bathroom/' + id, { method: 'DELETE' });
   }
 
   render() {
     return (
-      <div>
+      <div className='container'>
         <h1>ToiLet Me In</h1>
-        <ol>
-          {this.state.queue.map(person => (
-            <li key={person.id} id={person.id}>
-              <p>{person.name}</p>
-              <p>{person.urgency}</p>
-              <button
-                type='submit'
-                onClick={e => this.removePerson(person.id, e)}
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ol>
-        <div className='add-person'>
-          <label htmlFor='name'>Name</label>
-          <input id='name' type='text' ref={this.name} />
-          <label htmlFor='urgency'>Urgency</label>
-          <input id='urgency' type='text' ref={this.urgency} />
-          <button type='submit' onClick={this.addPerson}>
-            Submit
-          </button>
+        <div className='content'>
+          <button className='handle'></button>
+          <div className='headers'>
+            <h2>Name</h2>
+            <h2>Urgency</h2>
+            <h2>Remove</h2>
+          </div>
+          <ol>
+            {this.state.queue.map(person => (
+              <li key={person.id} id={person.id}>
+                <p className='name'>{person.name}</p>
+                <p className='urgency'>{person.urgency}</p>
+                <button
+                  className='remove'
+                  onClick={e => this.removePerson(person.id, e)}
+                ></button>
+              </li>
+            ))}
+          </ol>
+          <div className='add-person'>
+            <input id='name' type='text' placeholder='Name' ref={this.name} />
+            <input
+              id='urgency'
+              type='text'
+              placeholder='Urgency'
+              ref={this.urgency}
+            />
+            <button className='submit' onClick={this.addPerson}></button>
+          </div>
         </div>
       </div>
     );
