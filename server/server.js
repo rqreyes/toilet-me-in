@@ -21,12 +21,14 @@ app.get('/bathroom', queueController.getQueue, (req, res) => {
   res.status(200).json(res.locals.queue);
 });
 
-app.post('/bathroom', queueController.addPerson, (req, res) => {
-  res.status(200).json({
-    name: res.locals.name,
-    urgency: res.locals.urgency
-  });
-});
+app.post(
+  '/bathroom',
+  queueController.addPerson,
+  queueController.getQueue,
+  (req, res) => {
+    res.status(200).json(res.locals.queue);
+  }
+);
 
 app.delete('/bathroom/:id', queueController.removePerson, (req, res) => {
   res.status(200).json('Removed person');

@@ -27,8 +27,6 @@ const addPerson = (req, res, next) => {
       if (error) {
         res.json(error);
       } else {
-        res.locals.name = name;
-        res.locals.urgency = urgency;
         return next();
       }
     }

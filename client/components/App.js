@@ -7,6 +7,9 @@ class App extends Component {
       queue: []
     };
     this.getQueue = this.getQueue.bind(this);
+    this.name = React.createRef();
+    this.urgency = React.createRef();
+    this.addPerson = this.addPerson.bind(this);
     this.removePerson = this.removePerson.bind(this);
   }
 
@@ -17,9 +20,29 @@ class App extends Component {
   getQueue() {
     fetch('/bathroom')
       .then(res => res.json())
-      .then(queue =>
-        this.setState({ queue }, () => console.log('Fetched queue', queue))
-      );
+      .then(queue => {
+        this.setState({ queue }, () => console.log('Fetched queue', queue));
+      });
+  }
+
+  addPerson() {
+    const nameInput = this.name.current.value;
+    const urgencyInput = this.urgency.current.value;
+
+    fetch('/bathroom', {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({ name: nameInput, urgency: urgencyInput })
+    })
+      .then(res => res.json())
+      .then(newQueue => {
+        this.setState({ queue: newQueue }, () =>
+          console.log('Added person', newQueue)
+        );
+      });
   }
 
   removePerson(id) {
@@ -38,7 +61,10 @@ class App extends Component {
             <li key={person.id} id={person.id}>
               <p>{person.name}</p>
               <p>{person.urgency}</p>
-              <button onClick={e => this.removePerson(person.id, e)}>
+              <button
+                type='submit'
+                onClick={e => this.removePerson(person.id, e)}
+              >
                 Remove
               </button>
             </li>
@@ -46,10 +72,12 @@ class App extends Component {
         </ol>
         <div className='add-person'>
           <label htmlFor='name'>Name</label>
-          <input id='name' type='text' />
+          <input id='name' type='text' ref={this.name} />
           <label htmlFor='urgency'>Urgency</label>
-          <input id='urgency' type='text' />
-          <button>Submit</button>
+          <input id='urgency' type='text' ref={this.urgency} />
+          <button type='submit' onClick={this.addPerson}>
+            Submit
+          </button>
         </div>
       </div>
     );
