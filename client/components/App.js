@@ -4,13 +4,19 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      queue: []
+      queue: [],
+      flush: false,
+      play: false
     };
     this.getQueue = this.getQueue.bind(this);
     this.name = React.createRef();
     this.urgency = React.createRef();
     this.addPerson = this.addPerson.bind(this);
     this.removePerson = this.removePerson.bind(this);
+    this.secret = this.secret.bind(this);
+    this.audio = new Audio(
+      'https://iringtone.net/rington/file?id=8454&type=sound&name=mp3'
+    );
   }
 
   componentDidMount() {
@@ -59,12 +65,29 @@ class App extends Component {
     fetch('/bathroom/' + id, { method: 'DELETE' });
   }
 
+  secret() {
+    this.setState({ flush: !this.state.flush });
+  }
+
+  play() {
+    this.setState({ play: true, pause: false });
+    this.audio.play();
+  }
+
   render() {
+    let flush = this.state.flush ? 'flush' : '';
+
     return (
-      <div className='container'>
+      <div className={`container ${flush}`}>
         <h1>ToiLet Me In</h1>
         <div className='content'>
-          <button className='handle'></button>
+          <button
+            className='handle'
+            onClick={() => {
+              this.secret();
+              this.play();
+            }}
+          ></button>
           <div className='headers'>
             <h2>Name</h2>
             <h2>Urgency</h2>
@@ -88,13 +111,8 @@ class App extends Component {
             <h2>Add</h2>
           </div>
           <div className='add-person'>
-            <input id='name' type='text' placeholder='Name' ref={this.name} />
-            <input
-              id='urgency'
-              type='text'
-              placeholder='Urgency'
-              ref={this.urgency}
-            />
+            <input id='name' type='text' ref={this.name} />
+            <input id='urgency' type='text' ref={this.urgency} />
             <button className='submit' onClick={this.addPerson}></button>
           </div>
         </div>

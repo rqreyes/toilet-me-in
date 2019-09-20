@@ -37,11 +37,9 @@ const createToken = (req, res, next) => {
   jwt.sign(
     { username: res.locals.username },
     'secretKey',
-    { expiresIn: '30s' },
+    { expiresIn: '3600000s' },
     (error, token) => {
-      res.cookie('token', token, {
-        expires: new Date(Date.now() + 30000)
-      });
+      res.cookie('token', token);
       return next();
     }
   );
